@@ -198,7 +198,7 @@ const ArticleImageWrapperStyled = styled.div`
 `;
 
 const ArticleNameStyled = styled(ArticleCard.Title)`
-  max-height: 2rem;
+  max-height: 2.1rem;
   overflow: hidden;
   margin: 0 0 ${theme.vars.spacing?.m};
   font-family: ${theme.vars.typography?.fontFamilySystem};

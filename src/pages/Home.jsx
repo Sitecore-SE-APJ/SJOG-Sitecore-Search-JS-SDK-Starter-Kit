@@ -21,8 +21,10 @@ const Home = () => {
       <HomeFAQ />
       <HighlightedArticles>
         <HighlightedWrapper>
-          <HTMBlockWidget rfkId="highlight_title" />
-          <HomeHighlighted rfkId="search_home_highlight_articles" />
+          {/* <HTMBlockWidget rfkId="rfkid_blogs" /> */}
+          {/* <HomeHighlighted rfkId="search_home_highlight_articles" /> */}
+          <h1>Latest Blogs</h1>
+          <HomeHighlighted rfkId="rfkid_blogs" />
         </HighlightedWrapper>
       </HighlightedArticles>
     </>

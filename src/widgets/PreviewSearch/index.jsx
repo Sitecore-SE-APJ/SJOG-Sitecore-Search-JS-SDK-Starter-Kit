@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { WidgetDataType, usePreviewSearch, widget } from '@sitecore-search/react';
 import { Presence, PreviewSearch } from '@sitecore-search/ui';
 
-import { DEFAULT_IMAGE, HIGHLIGHT_DATA } from '../../data/constants';
+import { DEFAULT_IMAGE, DEFAULT_PIN_IMAGE, HIGHLIGHT_DATA } from '../../data/constants';
 import { HighlightComponent, getDescription } from '../utils';
 import {
   ArticleCardStyled,
@@ -14,8 +14,44 @@ import {
   SearchGroupHeadingStyled,
 } from './styled';
 
+function addDomainToRelativeUrl(relativeUrl) {
+  const baseUrl = 'https://www.sjog.org.au';
+  const absoluteUrl = new URL(relativeUrl, baseUrl).href;
+  return absoluteUrl;
+}
+
+function getImage(article) {
+  if(article?.image_url?.length > 0) {
+    return addDomainToRelativeUrl(article.image_url).toString();
+  }
+
+  if(article?.image?.length > 0) {
+    return article.image;
+  }
+
+  return DEFAULT_IMAGE;
+}
+
+const displayLocation = (article) => {
+
+  if(article?.hospital_reference?.length > 0) {
+    return (
+      <>
+        <br />
+        <span>&gt; {article.hospital_reference}</span>
+      </>
+    );
+  }
+
+  return "";
+};
+
 // eslint-disable-next-line react/prop-types
 export const PreviewSearchNewComponent = ({ defaultItemsPerPage = 8 }) => {
+
+
+  
+
   const {
     widgetRef,
     actions: { onItemClick, onKeyphraseChange },
@@ -30,7 +66,7 @@ export const PreviewSearchNewComponent = ({ defaultItemsPerPage = 8 }) => {
       query
         .getRequest()
         .setSearchQueryHighlightFragmentSize(500)
-        .setSearchQueryHighlightFields(['title', 'description'])
+        .setSearchQueryHighlightFields(['name', 'description'])
         .setSearchQueryHighlightPreTag(HIGHLIGHT_DATA.pre)
         .setSearchQueryHighlightPostTag(HIGHLIGHT_DATA.post);
     },
@@ -132,15 +168,16 @@ export const PreviewSearchNewComponent = ({ defaultItemsPerPage = 8 }) => {
                         >
                           <ArticleCardStyled.Root>
                             <ArticleCardStyled.ImageWrapper>
-                              <ArticleCardStyled.Image src={article.image_url || article.image || DEFAULT_IMAGE} />
+                                <ArticleCardStyled.Image src={getImage(article)} />
                             </ArticleCardStyled.ImageWrapper>
                             <ArticleCardStyled.Name>
                               <HighlightComponent
-                                text={getDescription(article, 'title')}
+                                text={getDescription(article, 'name')}
                                 preSeparator={HIGHLIGHT_DATA.pre}
                                 postSeparator={HIGHLIGHT_DATA.post}
                                 highlightElement={HIGHLIGHT_DATA.highlightTag}
                               />
+                              {displayLocation(article)}
                             </ArticleCardStyled.Name>
                           </ArticleCardStyled.Root>
                         </PreviewSearchStyled.Link>

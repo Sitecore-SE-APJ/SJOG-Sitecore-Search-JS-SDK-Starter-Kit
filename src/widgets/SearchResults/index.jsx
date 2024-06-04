@@ -34,6 +34,24 @@ import {
 import PropTypes from 'prop-types';
 
 
+function addDomainToRelativeUrl(relativeUrl) {
+  const baseUrl = 'https://www.sjog.org.au';
+  const absoluteUrl = new URL(relativeUrl, baseUrl).href;
+  return absoluteUrl;
+}
+
+function getImage(article) {
+  if(article?.image_url?.length > 0) {
+    return addDomainToRelativeUrl(article.image_url).toString();
+  }
+
+  if(article?.image?.length > 0) {
+    return article.image;
+  }
+
+  return DEFAULT_IMAGE;
+}
+
 export const SearchResultsWithLayoutOptionComponent = ({
  defaultSortType = 'featured_desc',
  defaultPage = 1,
@@ -220,7 +238,7 @@ export const SearchResultsWithLayoutOptionComponent = ({
                           </ArticleCardStyled.ImageWrapper>
                           <ArticleCardStyled.Title>
                             <ArticleCardStyled.Link
-                              title={a.title}
+                              title={a.name}
                               to={`/detail/${a.id}`}
                               onClick={(e) => {
                                 e.preventDefault();
@@ -228,7 +246,7 @@ export const SearchResultsWithLayoutOptionComponent = ({
                                 navigate(`/detail/${a.id}`);
                               }}
                             >
-                              {a.title}
+                              {a.name}
                             </ArticleCardStyled.Link>
                           </ArticleCardStyled.Title>
                           <ArticleCardStyled.Subtitle>
@@ -248,7 +266,7 @@ export const SearchResultsWithLayoutOptionComponent = ({
                       {articles.map((a, index) => (
                         <ArticleCardRowStyled.Root key={`${a.id}@${a.source_id}@${language}`}>
                           <ArticleCardRowStyled.Left>
-                            <ArticleCardRowStyled.Image src={a.image_url || a.image || DEFAULT_IMAGE} />
+                            <ArticleCardRowStyled.Image src={getImage(a)} />
                           </ArticleCardRowStyled.Left>
                           <ArticleCardRowStyled.Right>
                             <ArticleCardRowStyled.Title>
@@ -260,7 +278,7 @@ export const SearchResultsWithLayoutOptionComponent = ({
                                   navigate(`/detail/${a.id}`);
                                 }}
                               >
-                                {a.title}
+                                {a.name}
                               </ArticleCardRowStyled.Link>
                             </ArticleCardRowStyled.Title>
                             <ArticleCardRowStyled.Content>
